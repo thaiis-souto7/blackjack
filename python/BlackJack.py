@@ -51,23 +51,30 @@ def main(argv):
                     break
 
             while(True):       
-                teste = "testando"
-                time.sleep(20)
-                s.send(teste.encode()) #.encode - converte a string para bytes
-                data = s.recv(BUFFER_SIZE)
-                texto_recebido = repr(data) #converte de bytes para um formato "printável"
-                print('Recebido do servidor', texto_recebido)
-                texto_string = data.decode('utf-8') #converte os bytes em string
-                
-                #Finaliza o game caso queira, ou continua
-                keepPlaying = input("Deseja continuar jogando? [s/n] \n----> ")
-                if(keepPlaying == "s" or keepPlaying == "S"):
-                    numGame += 1
+                play = int(input("1 - Deseja jogar?\n2 - Deseja sair\n----> "))
+                if(play == 1):
+                    teste = "testando"
+                    time.sleep(10)
+                    s.send(teste.encode()) #.encode - converte a string para bytes
+                    data = s.recv(BUFFER_SIZE)
+                    texto_recebido = repr(data) #converte de bytes para um formato "printável"
+                    print('Recebido do servidor', texto_recebido)
+                    texto_string = data.decode('utf-8') #converte os bytes em string
+                    
+                    #Finaliza o game caso queira, ou continua
+                    keepPlaying = input("Deseja continuar jogando? [s/n] \n----> ")
+                    if(keepPlaying == "s" or keepPlaying == "S"):
+                        numGame += 1
+                    else:
+                        print('O jogo será encerrado !!')
+                        print("O vencedor foi XXXX")
+                        s.close()
+                        break
                 else:
-                    print('O jogo será encerrado !!')
-                    print("O vencedor foi XXXX")
-                    s.close()
+                    print("Saindo do jogo")
                     break
+                    
+                
 
     except Exception as error:
         print("Exceção - Programa será encerrado!")
