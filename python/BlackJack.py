@@ -7,16 +7,14 @@ BUFFER_SIZE = 1024  # tamanho do buffer para recepção dos dados
 
 ListPlayers = []
 
-# def InfoPlayer(numPlayers):
-#     name = input("----> Digite seu nome: ")
-#     city = input("----> Digite sua cidade: ")
-#     p = AddPlayer(numPlayers, name, city, 1000, 0)
+def InfoPlayer(numPlayers):
+    name = input("----> Digite seu nome: ")
+    city = input("----> Digite sua cidade: ")
+    p = AddPlayer(numPlayers, name, city, 1000, 0)
 
 
 class AddPlayer:
-    
-    """User class for representing name, city, amount and victories of players"""
-    def _init_(self, code, name, city, amount, victories):
+    def __init__(self, code, name, city, amount, victories):
         self.code = code
         self.name = name
         self.city = city
@@ -41,8 +39,8 @@ def main(argv):
                     print("Limite de jogadores atingido!")
                     break
 
-                AddPlayer(numPlayers)
-                newPlayer = input("Deseja inserir novo jogador? s/n")
+                InfoPlayer(numPlayers)
+                newPlayer = input("Deseja inserir novo jogador? [s/n] \n----> ")
                 if(newPlayer == "s" or newPlayer == "S"):
                     numPlayers += 1
                     print(ListPlayers)
@@ -72,5 +70,3 @@ def main(argv):
 
 if __name__ == "__main__":   
     main(sys.argv[1:])
-    p1 = AddPlayer(1, "Thais", "BH", 1000.00, 0)
-    p2 = AddPlayer(2, "Filipe", "JM", 1000.00, 0)
