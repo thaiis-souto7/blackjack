@@ -33,6 +33,7 @@ def main(argv):
 
             print("\n*********** BLACKJACK ***********")
             numPlayers = 1
+            numGame = 0
 
             while(True):
                 
@@ -58,8 +59,13 @@ def main(argv):
                 print('Recebido do servidor', texto_recebido)
                 texto_string = data.decode('utf-8') #converte os bytes em string
                 
-                if (texto_string == 'bye'):
-                    print('vai encerrar o socket cliente!')
+                #Finaliza o game caso queira, ou continua
+                keepPlaying = input("Deseja continuar jogando? [s/n] \n----> ")
+                if(keepPlaying == "s" or keepPlaying == "S"):
+                    numGame += 1
+                else:
+                    print('O jogo será encerrado !!')
+                    print("O vencedor foi XXXX")
                     s.close()
                     break
 
