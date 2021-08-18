@@ -5,35 +5,26 @@ HOST = '127.0.0.1'  # endereço IP
 PORT = 20000        # Porta utilizada pelo servidor
 BUFFER_SIZE = 1024  # tamanho do buffer para recepção dos dados
 
-Players = []
+ListPlayers = []
 
-def Print():
-    print("BATATA")
+# def InfoPlayer(numPlayers):
+#     name = input("----> Digite seu nome: ")
+#     city = input("----> Digite sua cidade: ")
+#     p = AddPlayer(numPlayers, name, city, 1000, 0)
+
 
 class AddPlayer:
     
     """User class for representing name, city, amount and victories of players"""
-    def _init_(self, amount, victories):
-        name_user = input('----> Digite seu nome: ')
-        city_user = input('----> Digite sua cidade: ')
-        
-        """Create a new Player"""
-        self.name = name_user
-        self.city = city_user
+    def _init_(self, code, name, city, amount, victories):
+        self.code = code
+        self.name = name
+        self.city = city
         self.amount = amount
         self.victories = victories
 
-    def getName(self):
-        return self.name
+        ListPlayers.append((code, name, city, amount, victories))
 
-    def getCity(self):
-        return self.city
-
-    def getAmount(self):
-        return self.amount
-
-    def getVictories(self):
-        return self.victories
 
 def main(argv): 
 
@@ -42,14 +33,27 @@ def main(argv):
             s.connect((HOST, PORT))
 
             print("\n*********** BLACKJACK ***********")
-            
+            numPlayers = 1
+
+            while(True):
+                
+                if(numPlayers == 4):
+                    print("Limite de jogadores atingido!")
+                    break
+
+                AddPlayer(numPlayers)
+                newPlayer = input("Deseja inserir novo jogador? s/n")
+                if(newPlayer == "s" or newPlayer == "S"):
+                    numPlayers += 1
+                    print(ListPlayers)
+                else:
+                    break
 
             while(True):       
-                Print()
-                p1 = AddPlayer()
-                
+                teste = "testando"
+                print(ListPlayers)
                
-                s.send(p1.encode()) #texto.encode - converte a string para bytes
+                s.send(teste.encode()) #.encode - converte a string para bytes
                 data = s.recv(BUFFER_SIZE)
                 texto_recebido = repr(data) #converte de bytes para um formato "printável"
                 print('Recebido do servidor', texto_recebido)
@@ -68,3 +72,5 @@ def main(argv):
 
 if __name__ == "__main__":   
     main(sys.argv[1:])
+    p1 = AddPlayer(1, "Thais", "BH", 1000.00, 0)
+    p2 = AddPlayer(2, "Filipe", "JM", 1000.00, 0)
