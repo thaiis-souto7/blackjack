@@ -7,11 +7,16 @@ BUFFER_SIZE = 1024  # tamanho do buffer para recepção dos dados
 
 Players = []
 
+def Print():
+    print("BATATA")
+
 class AddPlayer:
+    
     """User class for representing name, city, amount and victories of players"""
     def _init_(self, amount, victories):
         name_user = input('----> Digite seu nome: ')
         city_user = input('----> Digite sua cidade: ')
+        
         """Create a new Player"""
         self.name = name_user
         self.city = city_user
@@ -32,8 +37,6 @@ class AddPlayer:
 
 def main(argv): 
 
-    users = [[]]
-
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((HOST, PORT))
@@ -42,15 +45,16 @@ def main(argv):
             
 
             while(True):       
-                    
+                Print()
                 p1 = AddPlayer()
                 
-
-                #s.send(texto.encode()) #texto.encode - converte a string para bytes
+               
+                s.send(p1.encode()) #texto.encode - converte a string para bytes
                 data = s.recv(BUFFER_SIZE)
                 texto_recebido = repr(data) #converte de bytes para um formato "printável"
                 print('Recebido do servidor', texto_recebido)
                 texto_string = data.decode('utf-8') #converte os bytes em string
+                
                 if (texto_string == 'bye'):
                     print('vai encerrar o socket cliente!')
                     s.close()
