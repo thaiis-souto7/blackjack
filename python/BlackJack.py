@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import socket, sys
+import time
 
 HOST = '127.0.0.1'  # endereço IP
 PORT = 20000        # Porta utilizada pelo servidor
@@ -35,8 +36,9 @@ def main(argv):
 
             while(True):
                 
-                if(numPlayers == 4):
+                if(numPlayers == 5):
                     print("Limite de jogadores atingido!")
+                    time.sleep(5)
                     break
 
                 InfoPlayer(numPlayers)
@@ -49,8 +51,7 @@ def main(argv):
 
             while(True):       
                 teste = "testando"
-                print(ListPlayers)
-               
+                time.sleep(20)
                 s.send(teste.encode()) #.encode - converte a string para bytes
                 data = s.recv(BUFFER_SIZE)
                 texto_recebido = repr(data) #converte de bytes para um formato "printável"
