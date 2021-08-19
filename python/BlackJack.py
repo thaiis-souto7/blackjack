@@ -70,7 +70,7 @@ def main(argv):
                     break
 
                 InfoPlayer(numPlayers)
-                newPlayer = input("\n----> Deseja inserir novo jogador? [s/n] \n----> ")
+                newPlayer = input("\n----> Deseja inserir um novo jogador? [s/n] \n----> ")
                 if(newPlayer == "s" or newPlayer == "S"):
                     numPlayers += 1
                     print(ListPlayers)
