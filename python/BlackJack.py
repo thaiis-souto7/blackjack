@@ -7,6 +7,7 @@ PORT = 20000        # Porta utilizada pelo servidor
 BUFFER_SIZE = 1024  # tamanho do buffer para recepção dos dados
 
 ListPlayers = []
+valueRound = 0
 
 def InfoPlayer(numPlayers):
     name = input("----> Digite seu nome: ")
@@ -22,21 +23,34 @@ class AddPlayer:
         self.amount = amount
         self.victories = victories
 
-        ListPlayers.append((code, name, city, amount, victories))
+        ListPlayers.append([code, name, city, amount, victories])
 
     def getAmount(self):
         return self.amount
 
 
-def Bet(amountPlayer):
-    i = int(amountPlayer)
-    value = input("Qual valor deseja apostar? \n----> ")
+def Bet(player,valueRound):
+    amountPlayer = int(player[3])
+    value = int(input("Qual valor deseja apostar? \n----> "))
     while (value < 1 or value > amountPlayer):
         print("Não é permitido apostar esse valor")
-        value = input("Qual valor deseja apostar? \n----> ")
+        value = int(input("Qual valor deseja apostar? \n----> "))
 
-    return value
+    player[3] -= value
+    print(player,"\n")
+    valueRound += value
     
+    return player
+
+def Round(ListPlayers,numRound):
+    
+    print("\n*********** BLACKJACK ***********\n")
+    print("\n************ ROUND ",numRound+1," ************\n")
+    
+    for i in range(len(ListPlayers)):
+        print("Vez do jogador", ListPlayers[i][1])
+        ListPlayers[i] = Bet(ListPlayers[i], valueRound)
+
 
 
 def main(argv): 
@@ -67,9 +81,11 @@ def main(argv):
                 play = int(input("\n----> OPÇÕES DE JOGO: \n1 - Jogar\n2 - Sair\n----> "))
                 
                 if(play == 1):
-
                     
-                    Bet(ListPlayers[0])
+                    numRound = 0
+                    Round(ListPlayers,numRound)
+                   
+                    print("FUNCIONANDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
                     teste = "testando"
 
 
