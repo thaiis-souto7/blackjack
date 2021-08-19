@@ -12,7 +12,7 @@ def InfoPlayer(numPlayers):
     name = input("----> Digite seu nome: ")
     city = input("----> Digite sua cidade: ")
     p = AddPlayer(numPlayers, name, city, 1000, 0)
-
+     
 
 class AddPlayer:
     def __init__(self, code, name, city, amount, victories):
@@ -24,14 +24,27 @@ class AddPlayer:
 
         ListPlayers.append((code, name, city, amount, victories))
 
+    def getAmount(self):
+        return self.amount
+
+
+def Bet(amountPlayer):
+    i = int(amountPlayer)
+    value = input("Qual valor deseja apostar? \n----> ")
+    while (value < 1 or value > amountPlayer):
+        print("Não é permitido apostar esse valor")
+        value = input("Qual valor deseja apostar? \n----> ")
+
+    return value
+    
+
 
 def main(argv): 
-
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((HOST, PORT))
 
-            print("\n*********** BLACKJACK ***********")
+            print("\n*********** BLACKJACK ***********\n")
             numPlayers = 1
             numGame = 0
 
@@ -43,7 +56,7 @@ def main(argv):
                     break
 
                 InfoPlayer(numPlayers)
-                newPlayer = input("Deseja inserir novo jogador? [s/n] \n----> ")
+                newPlayer = input("\n----> Deseja inserir novo jogador? [s/n] \n----> ")
                 if(newPlayer == "s" or newPlayer == "S"):
                     numPlayers += 1
                     print(ListPlayers)
@@ -51,9 +64,15 @@ def main(argv):
                     break
 
             while(True):       
-                play = int(input("1 - Deseja jogar?\n2 - Deseja sair\n----> "))
+                play = int(input("\n----> OPÇÕES DE JOGO: \n1 - Jogar\n2 - Sair\n----> "))
+                
                 if(play == 1):
+
+                    
+                    Bet(ListPlayers[0])
                     teste = "testando"
+
+
                     time.sleep(10)
                     s.send(teste.encode()) #.encode - converte a string para bytes
                     data = s.recv(BUFFER_SIZE)
