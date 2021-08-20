@@ -25,9 +25,6 @@ class AddPlayer:
 
         ListPlayers.append([code, name, city, amount, victories])
 
-    def getAmount(self):
-        return self.amount
-
 
 def Bet(player,valueRound):
     amountPlayer = int(player[3])
@@ -42,9 +39,10 @@ def Bet(player,valueRound):
     
     return player
 
+
 def Round(ListPlayers,numRound):
     
-    print("\n*********** BLACKJACK ***********\n")
+    print("\n*********** BLACKJACK ***********")
     print("\n************ ROUND ",numRound+1," ************\n")
     
     for i in range(len(ListPlayers)):
@@ -85,17 +83,8 @@ def main(argv):
                     numRound = 0
                     Round(ListPlayers,numRound)
                    
-                    print("FUNCIONANDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
                     teste = "testando"
 
-
-                    time.sleep(10)
-                    s.send(teste.encode()) #.encode - converte a string para bytes
-                    data = s.recv(BUFFER_SIZE)
-                    texto_recebido = repr(data) #converte de bytes para um formato "printável"
-                    print('Recebido do servidor', texto_recebido)
-                    texto_string = data.decode('utf-8') #converte os bytes em string
-                    
                     #Finaliza o game caso queira, ou continua
                     keepPlaying = input("Deseja continuar jogando? [s/n] \n----> ")
                     if(keepPlaying == "s" or keepPlaying == "S"):
@@ -105,6 +94,15 @@ def main(argv):
                         print("O vencedor foi XXXX")
                         s.close()
                         break
+
+                    time.sleep(10)
+                    s.send(teste.encode()) #.encode - converte a string para bytes
+                    data = s.recv(BUFFER_SIZE)
+                    texto_recebido = repr(data) #converte de bytes para um formato "printável"
+                    print('Recebido do servidor', texto_recebido)
+                    texto_string = data.decode('utf-8') #converte os bytes em string
+                    
+                    
                 else:
                     print("Saindo do jogo")
                     break
