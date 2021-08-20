@@ -11,7 +11,7 @@ ListPlayers = []
 valueRound = 0
 
 def InfoPlayer(numPlayers):
-    name = input("----> Digite seu nome: ")
+    name = input("\n----> Digite seu nome: ")
     city = input("----> Digite sua cidade: ")
     p = AddPlayer(numPlayers, name, city, 1000, 0, [])
      
@@ -27,7 +27,7 @@ class AddPlayer:
 
         ListPlayers.append([code, name, city, amount, victories, cards])
 
-
+#Pergunta quanto que o jogador quer apostar e faz a aposta
 def Bet(player):
     amountPlayer = int(player[3])
     value = int(input("Qual valor deseja apostar? \n----> "))
@@ -43,7 +43,7 @@ def Bet(player):
     return player
        
 
-
+#Reseta o baralho já o embaralhando
 def ResetCheap():
     cards = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
     suits = ["♣", "♦", "♥", "♠"]
@@ -56,7 +56,7 @@ def ResetCheap():
     random.shuffle(cheap)
     return cheap
 
-
+#Distribui as duas cartas iniciais aos jogadores
 def GiveCards(ListPlayers,cheap):
 
         for i in range(len(ListPlayers)):
@@ -68,7 +68,7 @@ def GiveCards(ListPlayers,cheap):
 
             del(cheap[0:2])
 
-
+#Da a opção de comer mais cartas
 def eat(player,cheap):
     while(True):
         eating = input("----> Deseja comer uma nova carta ? [s/n] \n----> ")
@@ -83,13 +83,38 @@ def eat(player,cheap):
     return player
 
 
+#Mostra o total de cartas que tem na mão do jogador
+"""def CountCards(cards):
 
+    values = {
+        "A": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "10": 10,
+        "J": 10,
+        "Q": 10,
+        "K": 10
+    }"""
+
+#Mostra o montande de dinheiro que o jogador tem
+def ShowAmount(player):
+    print("Seu montante é   |",player[3])
+
+
+#Controla o decorrer da rodada
 def Round(ListPlayers,numRound,cheap):
     print("\n*********** BLACKJACK ***********")
     print("\n************ ROUND ",numRound+1," ************\n")
     
     for i in range(len(ListPlayers)):
         print("\nVez do jogador", ListPlayers[i][1])
+        ShowAmount(ListPlayers[i])
         ListPlayers[i] = Bet(ListPlayers[i])
     
     #Entrega duas cartas para os jogadores
@@ -97,12 +122,10 @@ def Round(ListPlayers,numRound,cheap):
 
     #Da a opção de comer novamente ou não
     for i in range(len(ListPlayers)):
-        print("\nVez do jogador", ListPlayers[i][1])
-        print("Suas Cartas   |",ListPlayers[i][5])
+        print("\n*********************************\nVez do jogador", ListPlayers[i][1])
+        print("\nSuas Cartas   |",ListPlayers[i][5])
+        ShowAmount(ListPlayers[i])
         ListPlayers[i] = eat(ListPlayers[i],cheap) 
-    
-
-
 
 
 def main(argv): 
@@ -118,16 +141,14 @@ def main(argv):
                 
                 if(numPlayers == 5):
                     print("Limite de jogadores atingido!")
-                    time.sleep(5)
                     break
-
-                InfoPlayer(numPlayers)
-                newPlayer = input("\n----> Deseja inserir um novo jogador? [s/n] \n----> ")
-                if(newPlayer == "s" or newPlayer == "S" or newPlayer == "Sim" or newPlayer == "SIM" or newPlayer == "sim"):
-                    numPlayers += 1
-                    print(ListPlayers)
                 else:
-                    break
+                    InfoPlayer(numPlayers)
+                    newPlayer = input("\n----> Deseja inserir um novo jogador? [s/n] \n----> ")
+                    if(newPlayer == "s" or newPlayer == "S" or newPlayer == "Sim" or newPlayer == "SIM" or newPlayer == "sim"):
+                        numPlayers += 1
+                    else:
+                        break
 
             while(True):       
                 play = int(input("\n----> OPÇÕES DE JOGO: \n1 - Jogar\n2 - Sair\n----> "))
