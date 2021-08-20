@@ -13,19 +13,20 @@ valueRound = 0
 def InfoPlayer(numPlayers):
     name = input("\n----> Digite seu nome: ")
     city = input("----> Digite sua cidade: ")
-    p = AddPlayer(numPlayers, name, city, 1000, 0, [])
+    p = AddPlayer(numPlayers, name, city, 1000, 0, [], 0)
      
 
 class AddPlayer:
-    def __init__(self, code, name, city, amount, victories, cards):
+    def __init__(self, code, name, city, amount, victories, cards, punctuation):
         self.code = code
         self.name = name
         self.city = city
         self.amount = amount
         self.victories = victories
         self.cards = cards
+        self.punctuation = punctuation
 
-        ListPlayers.append([code, name, city, amount, victories, cards])
+        ListPlayers.append([code, name, city, amount, victories, cards, punctuation])
 
 #Pergunta quanto que o jogador quer apostar e faz a aposta
 def Bet(player):
@@ -45,16 +46,9 @@ def Bet(player):
 
 #Reseta o baralho já o embaralhando
 def ResetCheap():
-    cards = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
-    suits = ["♣", "♦", "♥", "♠"]
-    cheap = []
-
-    for suit in suits:
-       for card in cards:
-           cheap.append("{}{}{}".format(card," ", suit))
-
-    random.shuffle(cheap)
-    return cheap
+    cards = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]*4
+    random.shuffle(cards)
+    return cards
 
 #Distribui as duas cartas iniciais aos jogadores
 def GiveCards(ListPlayers,cheap):
@@ -77,30 +71,67 @@ def eat(player,cheap):
             cards.append(cheap[0])
             player[5] = cards
             del(cheap[0:1])
-            print("Suas Cartas   |",player[5])
+            print("Suas Cartas   |", player[5], "TOTAL   |", CountCards(player[5]))
         else:
             break
     return player
 
 
 #Mostra o total de cartas que tem na mão do jogador
-"""def CountCards(cards):
+def CountCards(cards):
 
-    values = {
-        "A": 1,
-        "2": 2,
-        "3": 3,
-        "4": 4,
-        "5": 5,
-        "6": 6,
-        "7": 7,
-        "8": 8,
-        "9": 9,
-        "10": 10,
-        "J": 10,
-        "Q": 10,
-        "K": 10
-    }"""
+    sum = 0
+    for i in range(len(cards)):
+        if cards[i] == "A":
+            sum += 1
+        elif cards[i] == "2":
+            sum += 2
+        elif cards[i] == "3":
+            sum += 3
+        elif cards[i] == "4":
+            sum += 4
+        elif cards[i] == "5":
+            sum += 5
+        elif cards[i] == "6":
+            sum += 6
+        elif cards[i] == "7":
+            sum += 7
+        elif cards[i] == "8":
+            sum += 8
+        elif cards[i] == "9":
+            sum += 9
+        elif cards[i] == "10":
+            sum += 10
+        elif cards[i] == "J":
+            sum += 10
+        elif cards[i] == "Q":
+            sum += 10
+        elif cards[i] == "K":
+            sum += 10
+    return sum
+
+def win(ListPlayers):
+
+    large = 0
+    codWinner = 0
+    winner = ""
+    
+    for i in range(len(ListPlayers)):
+        
+        if large == 21:
+            print("Temos um empate")
+        elif ListPlayers[i][6] > large and ListPlayers[i][6] <= 21:
+            
+
+            large = ListPlayers[i][6]
+            winner = ListPlayers[i][1]
+            codWinner = ListPlayers[i][0]
+
+    ListPlayers[codWinner-1][4] += 1
+
+    return winner
+
+
 
 #Mostra o montande de dinheiro que o jogador tem
 def ShowAmount(player):
@@ -123,9 +154,14 @@ def Round(ListPlayers,numRound,cheap):
     #Da a opção de comer novamente ou não
     for i in range(len(ListPlayers)):
         print("\n*********************************\nVez do jogador", ListPlayers[i][1])
-        print("\nSuas Cartas   |",ListPlayers[i][5])
+        ListPlayers[i][6] = CountCards(ListPlayers[i][5])
+        print("\nSuas Cartas   |", ListPlayers[i][5], "TOTAL   |", ListPlayers[i][6])
         ShowAmount(ListPlayers[i])
-        ListPlayers[i] = eat(ListPlayers[i],cheap) 
+        ListPlayers[i] = eat(ListPlayers[i], cheap) 
+    
+    print("O Vencedor foi   |", win(ListPlayers))
+
+    print(ListPlayers)
 
 
 def main(argv): 
