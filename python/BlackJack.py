@@ -13,21 +13,22 @@ valueRound = 0
 def InfoPlayer(numPlayers):
     name = input("----> Digite seu nome: ")
     city = input("----> Digite sua cidade: ")
-    p = AddPlayer(numPlayers, name, city, 1000, 0)
+    p = AddPlayer(numPlayers, name, city, 1000, 0, [])
      
 
 class AddPlayer:
-    def __init__(self, code, name, city, amount, victories):
+    def __init__(self, code, name, city, amount, victories, cards):
         self.code = code
         self.name = name
         self.city = city
         self.amount = amount
         self.victories = victories
+        self.cards = cards
 
-        ListPlayers.append([code, name, city, amount, victories])
+        ListPlayers.append([code, name, city, amount, victories, cards])
 
 
-def Bet(player,valueRound):
+def Bet(player):
     amountPlayer = int(player[3])
     value = int(input("Qual valor deseja apostar? \n----> "))
     while (value < 1 or value > amountPlayer):
@@ -35,7 +36,8 @@ def Bet(player,valueRound):
         value = int(input("Qual valor deseja apostar? \n----> "))
 
     player[3] -= value
-    print(player,"\n")
+
+    global valueRound 
     valueRound += value
     
     return player
@@ -47,24 +49,27 @@ def Round(ListPlayers,numRound):
     
     for i in range(len(ListPlayers)):
         print("Vez do jogador", ListPlayers[i][1])
-        ListPlayers[i] = Bet(ListPlayers[i], valueRound)
+        ListPlayers[i] = Bet(ListPlayers[i])
+        
 
-    
 
-def AddCheap():
+def ResetCheap():
     cards = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
-    suits = ["copas", "ouros", "paus", "espadas"]
+    suits = ["♣", "♦", "♥", "♠"]
     cheap = []
 
     for suit in suits:
        for card in cards:
-           cheap.append("{}{}{}".format(card, " ", suit))
+           cheap.append("{}{}{}".format(card," ", suit))
 
+    random.shuffle(cheap)
     return cheap
 
 
-def ShuffleCards(cheap):
-    cheap = random.shuffle(cheap)
+def GiveCards(cheap):
+    
+    return 0
+
 
 
 def main(argv): 
@@ -85,7 +90,7 @@ def main(argv):
 
                 InfoPlayer(numPlayers)
                 newPlayer = input("\n----> Deseja inserir um novo jogador? [s/n] \n----> ")
-                if(newPlayer == "s" or newPlayer == "S"):
+                if(newPlayer == "s" or newPlayer == "S" or newPlayer == "Sim" or newPlayer == "SIM" or newPlayer == "sim"):
                     numPlayers += 1
                     print(ListPlayers)
                 else:
@@ -100,10 +105,14 @@ def main(argv):
                     numRound = 0
                     Round(ListPlayers,numRound)
 
-                    #Cria um baralho com 52 cartas e embaralha as cartas
-                    cheap = AddCheap()
-                    ShuffleCards(cheap)
+                    print("Montante Round   |   ",valueRound)
+                    print("Lista de Jogadores   |   ",ListPlayers)
 
+                    #Cria um baralho com 52 cartas e embaralha as cartas
+                    cheap = ResetCheap()
+                    print(cheap)
+
+                    GiveCards(cheap)
                    
                     teste = "testando"
 
@@ -125,9 +134,11 @@ def main(argv):
                     texto_string = data.decode('utf-8') #converte os bytes em string
                     
                     
-                else:
+                elif(play == 2):
                     print("Saindo do jogo")
                     break
+                else:
+                    print("Opção errada !!\n")
                     
                 
 
