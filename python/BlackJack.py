@@ -72,6 +72,8 @@ def eat(player,cheap):
             player[5] = cards
             del(cheap[0:1])
             print("Suas Cartas   |", player[5], "TOTAL   |", CountCards(player[5]))
+            player[6] = CountCards(player[5])
+            
         else:
             break
     return player
@@ -108,6 +110,7 @@ def CountCards(cards):
             sum += 10
         elif cards[i] == "K":
             sum += 10
+    
     return sum
 
 def win(ListPlayers):
@@ -118,11 +121,11 @@ def win(ListPlayers):
     
     for i in range(len(ListPlayers)):
         
-        if large == 21:
+        if large == 21 and ListPlayers[i][6] == 21:
             print("Temos um empate")
+            
         elif ListPlayers[i][6] > large and ListPlayers[i][6] <= 21:
             
-
             large = ListPlayers[i][6]
             winner = ListPlayers[i][1]
             codWinner = ListPlayers[i][0]
@@ -154,12 +157,16 @@ def Round(ListPlayers,numRound,cheap):
     #Da a opção de comer novamente ou não
     for i in range(len(ListPlayers)):
         print("\n*********************************\nVez do jogador", ListPlayers[i][1])
+        
+
         ListPlayers[i][6] = CountCards(ListPlayers[i][5])
+
         print("\nSuas Cartas   |", ListPlayers[i][5], "TOTAL   |", ListPlayers[i][6])
         ShowAmount(ListPlayers[i])
         ListPlayers[i] = eat(ListPlayers[i], cheap) 
     
     print("O Vencedor foi   |", win(ListPlayers))
+
 
     print(ListPlayers)
 
