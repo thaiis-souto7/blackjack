@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import socket, sys
 import time
+import random
 
 HOST = '127.0.0.1'  # endereço IP
 PORT = 20000        # Porta utilizada pelo servidor
@@ -41,7 +42,6 @@ def Bet(player,valueRound):
 
 
 def Round(ListPlayers,numRound):
-    
     print("\n*********** BLACKJACK ***********")
     print("\n************ ROUND ",numRound+1," ************\n")
     
@@ -49,6 +49,22 @@ def Round(ListPlayers,numRound):
         print("Vez do jogador", ListPlayers[i][1])
         ListPlayers[i] = Bet(ListPlayers[i], valueRound)
 
+    
+
+def AddCheap():
+    cards = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
+    suits = ["copas", "ouros", "paus", "espadas"]
+    cheap = []
+
+    for suit in suits:
+       for card in cards:
+           cheap.append("{}{}{}".format(card, " ", suit))
+
+    return cheap
+
+
+def ShuffleCards(cheap):
+    cheap = random.shuffle(cheap)
 
 
 def main(argv): 
@@ -80,8 +96,14 @@ def main(argv):
                 
                 if(play == 1):
                     
+                    #Cria um novo Round de Jogo
                     numRound = 0
                     Round(ListPlayers,numRound)
+
+                    #Cria um baralho com 52 cartas e embaralha as cartas
+                    cheap = AddCheap()
+                    ShuffleCards(cheap)
+
                    
                     teste = "testando"
 
