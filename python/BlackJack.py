@@ -66,9 +66,18 @@ def ResetCheap():
     return cheap
 
 
-def GiveCards(cheap):
-    
-    return 0
+def GiveCards(ListPlayers,cheap):
+
+        cards = []
+        print(cheap,"\n",ListPlayers)
+        cards.append(cheap[0])
+        cards.append(cheap[1])
+        
+        ListPlayers[0][5] = cards
+
+        del(cheap[0:2])
+
+
 
 
 
@@ -110,9 +119,9 @@ def main(argv):
 
                     #Cria um baralho com 52 cartas e embaralha as cartas
                     cheap = ResetCheap()
-                    print(cheap)
 
-                    GiveCards(cheap)
+                    #Entrega duas cartas para os jogadores
+                    GiveCards(ListPlayers,cheap)
                    
                     teste = "testando"
 
