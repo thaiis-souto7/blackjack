@@ -41,16 +41,7 @@ def Bet(player):
     valueRound += value
     
     return player
-
-
-def Round(ListPlayers,numRound):
-    print("\n*********** BLACKJACK ***********")
-    print("\n************ ROUND ",numRound+1," ************\n")
-    
-    for i in range(len(ListPlayers)):
-        print("Vez do jogador", ListPlayers[i][1])
-        ListPlayers[i] = Bet(ListPlayers[i])
-        
+       
 
 
 def ResetCheap():
@@ -68,15 +59,48 @@ def ResetCheap():
 
 def GiveCards(ListPlayers,cheap):
 
-        cards = []
-        print(cheap,"\n",ListPlayers)
-        cards.append(cheap[0])
-        cards.append(cheap[1])
-        
-        ListPlayers[0][5] = cards
+        for i in range(len(ListPlayers)):
+            cards = []
+            cards.append(cheap[0])
+            cards.append(cheap[1])
+            
+            ListPlayers[i][5] = cards
 
-        del(cheap[0:2])
+            del(cheap[0:2])
 
+
+def eat(player,cheap):
+    while(True):
+        eating = input("----> Deseja comer uma nova carta ? [s/n] \n----> ")
+        if(eating == "s" or eating == "S" or eating == "Sim" or eating == "SIM" or eating == "sim"):
+            cards = player[5]
+            cards.append(cheap[0])
+            player[5] = cards
+            del(cheap[0:1])
+            print("Suas Cartas   |",player[5])
+        else:
+            break
+    return player
+
+
+
+def Round(ListPlayers,numRound,cheap):
+    print("\n*********** BLACKJACK ***********")
+    print("\n************ ROUND ",numRound+1," ************\n")
+    
+    for i in range(len(ListPlayers)):
+        print("\nVez do jogador", ListPlayers[i][1])
+        ListPlayers[i] = Bet(ListPlayers[i])
+    
+    #Entrega duas cartas para os jogadores
+    GiveCards(ListPlayers,cheap)
+
+    #Da a opção de comer novamente ou não
+    for i in range(len(ListPlayers)):
+        print("\nVez do jogador", ListPlayers[i][1])
+        print("Suas Cartas   |",ListPlayers[i][5])
+        ListPlayers[i] = eat(ListPlayers[i],cheap) 
+    
 
 
 
@@ -112,16 +136,11 @@ def main(argv):
                     
                     #Cria um novo Round de Jogo
                     numRound = 0
-                    Round(ListPlayers,numRound)
-
-                    print("Montante Round   |   ",valueRound)
-                    print("Lista de Jogadores   |   ",ListPlayers)
 
                     #Cria um baralho com 52 cartas e embaralha as cartas
                     cheap = ResetCheap()
 
-                    #Entrega duas cartas para os jogadores
-                    GiveCards(ListPlayers,cheap)
+                    Round(ListPlayers,numRound,cheap)
                    
                     teste = "testando"
 
