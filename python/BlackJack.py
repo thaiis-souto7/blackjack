@@ -84,7 +84,11 @@ def CountCards(cards):
 
     sum = 0
     for i in range(len(cards)):
+        #Considera o A como 11 caso tenha um K Q J ou 10
         if cards[i] == "A":
+            for j in range(len(cards)):
+                if cards[j] == "K" or cards[j] == "Q" or cards[j] == "J" or cards[j] == "10":
+                    sum += 10
             sum += 1
         elif cards[i] == "2":
             sum += 2
@@ -111,6 +115,14 @@ def CountCards(cards):
         elif cards[i] == "K":
             sum += 10
     
+    #Trata caso o A esteja sendo considerado 11 e esteje estourando, ai passa ela para 1 denovo
+    for i in range(len(cards)):
+        if sum > 21:
+            if cards[i] == "A":
+                for j in range(len(cards)):
+                    if cards[j] == "K" or cards[j] == "Q" or cards[j] == "J" or cards[j] == "10":
+                        sum -= 10
+
     return sum
 
 def win(ListPlayers):
@@ -123,13 +135,16 @@ def win(ListPlayers):
         
         if large == 21 and ListPlayers[i][6] == 21:
             print("Temos um empate")
-            
+
         elif ListPlayers[i][6] > large and ListPlayers[i][6] <= 21:
             
             large = ListPlayers[i][6]
             winner = ListPlayers[i][1]
             codWinner = ListPlayers[i][0]
 
+    global valueRound
+    ListPlayers[codWinner-1][3] += valueRound
+    valueRound = 0
     ListPlayers[codWinner-1][4] += 1
 
     return winner
@@ -153,7 +168,7 @@ def Round(ListPlayers,numRound,cheap):
     
     #Entrega duas cartas para os jogadores
     GiveCards(ListPlayers,cheap)
-
+    print(cheap)
     #Da a opção de comer novamente ou não
     for i in range(len(ListPlayers)):
         print("\n*********************************\nVez do jogador", ListPlayers[i][1])
