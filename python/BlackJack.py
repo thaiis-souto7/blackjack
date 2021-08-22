@@ -47,8 +47,10 @@ def Bet(player):
 #Reseta o baralho já o embaralhando
 def ResetCheap():
     cards = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]*4
+    
+    cards2 = ["A","K","K","5","6","6","7","8","9","10","J","Q","K"]*4
     random.shuffle(cards)
-    return cards
+    return cards2
 
 #Distribui as duas cartas iniciais aos jogadores
 def GiveCards(ListPlayers,cheap):
@@ -141,9 +143,7 @@ def win(ListPlayers):
 
     for i in range(len(ListPlayers)):
         
-        print("BATATTINHAAAA COZIDA")
         points.append(ListPlayers[i][6])
-        print("BATATAAAAA")
         if points[i] > large and points[i] <= 21:
             large = points[i]
             winners.clear()
@@ -151,27 +151,26 @@ def win(ListPlayers):
             winners.append(ListPlayers[i][1])
             codWinners.append(ListPlayers[i][0])
             
-            print("FEIJAOOO")
         elif points[i] == large:
             winners.append(ListPlayers[i][1])
             codWinners.append(ListPlayers[i][0])
             
-            print("ARROOZZZZ")
         if points[i] == 21:
-            for i in range(len(points)):
-                if ListPlayers[i][5] == "A":
+            for j in range(len(ListPlayers[i][5])):
+                if ListPlayers[i][5][j] == "A":
                     blackjack.append(ListPlayers[i][1])
-                    codBlackjack.append(ListPlayers[i][1])
-                    
-                    print("O Q FALTAAAAAAAAA")
+                    codBlackjack.append(ListPlayers[i][0])
+                        
 
     global valueRound
     if len(blackjack) > 0:
         for i in range(len(blackjack)):
             ListPlayers[codBlackjack[i]-1][3] += valueRound/len(blackjack)
             ListPlayers[codBlackjack[i]-1][4] += 1
+        print("TIVEMOS BLACKJACK")
         valueRound = 0
         return blackjack
+
     elif len(winners) > 0 :
         #Se tiver mais que um vencedor, vai dividir o lucro entre os dois e a vitoria para os dois tambem
         for i in range(len(winners)):
@@ -179,11 +178,10 @@ def win(ListPlayers):
             ListPlayers[codWinners[i]-1][4] += 1
         valueRound = 0
         return winners
+
     #Caso ninguem tenha tido 21, da o valor total ao vencedor e a vitoria
     else:
         for i in range(len(ListPlayers)):
-            
-            print("A MINHAAAAAA ROLAAAAAAA")
             ListPlayers[i][3] += valueRound/len(ListPlayers)
         valueRound = 0
         print("Não tivemos vencedores, todos estouraram !! O valor foi redividido entre todos os jogadores !!")
@@ -219,9 +217,7 @@ def Round(ListPlayers,numRound,cheap):
         print("\nSuas Cartas   |", ListPlayers[i][5], "TOTAL   |", ListPlayers[i][6])
         ShowAmount(ListPlayers[i])
         ListPlayers[i] = eat(ListPlayers[i], cheap) 
-        print("HOJEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
     
-    print("AMANHAAAAAAAAAAAAA")
     print("O Vencedor foi   |", win(ListPlayers))
 
 
