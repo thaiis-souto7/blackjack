@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from os import scandir
 import socket, sys
 import time
 import random
@@ -47,10 +48,8 @@ def Bet(player):
 #Reseta o baralho já o embaralhando
 def ResetCheap():
     cards = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]*4
-    
-    cards2 = ["A","K","K","5","6","6","7","8","9","10","J","Q","K"]*4
     random.shuffle(cards)
-    return cards2
+    return cards
 
 #Distribui as duas cartas iniciais aos jogadores
 def GiveCards(ListPlayers,cheap):
@@ -206,7 +205,6 @@ def Round(ListPlayers,numRound,cheap):
     
     #Entrega duas cartas para os jogadores
     GiveCards(ListPlayers,cheap)
-    print(cheap)
     #Da a opção de comer novamente ou não
     for i in range(len(ListPlayers)):
         print("\n*********************************\nVez do jogador", ListPlayers[i][1])
@@ -266,12 +264,12 @@ def main(argv):
                     if(keepPlaying == "s" or keepPlaying == "S"):
                         numGame += 1
                     else:
-                        print('O jogo será encerrado !!')
-                        print("O vencedor foi XXXX")
+                        print('\nO jogo será encerrado !!')
+                        for i in range(len(ListPlayers)):
+                            print("\n", ListPlayers[i][1],"\n------\nCidade: ",ListPlayers[i][2],"\nMontante", ListPlayers[i][3], "\nVitorias: ", ListPlayers[i][4])
                         s.close()
                         break
 
-                    time.sleep(10)
                     s.send(teste.encode()) #.encode - converte a string para bytes
                     data = s.recv(BUFFER_SIZE)
                     texto_recebido = repr(data) #converte de bytes para um formato "printável"
@@ -281,6 +279,9 @@ def main(argv):
                     
                 elif(play == 2):
                     print("Saindo do jogo")
+                    for i in range(len(ListPlayers)):
+                        print("\n", ListPlayers[i][1],"\n------\nCidade: ",ListPlayers[i][2],"\nMontante", ListPlayers[i][3], "\nVitorias: ", ListPlayers[i][4])
+                    s.close()
                     break
                 else:
                     print("Opção errada !!\n")
