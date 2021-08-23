@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from os import scandir
 import socket, sys
 import time
 import random
@@ -11,20 +12,22 @@ ListPlayers = []
 valueRound = 0
 
 def InfoPlayer(numPlayers):
-    name = input("----> Digite seu nome: ")
+    name = input("\n----> Digite seu nome: ")
     city = input("----> Digite sua cidade: ")
-    p = AddPlayer(numPlayers, name, city, 1000, 0)
+    p = AddPlayer(numPlayers, name, city, 1000, 0, [], 0)
      
 
 class AddPlayer:
-    def __init__(self, code, name, city, amount, victories):
+    def __init__(self, code, name, city, amount, victories, cards, punctuation):
         self.code = code
         self.name = name
         self.city = city
         self.amount = amount
         self.victories = victories
+        self.cards = cards
+        self.punctuation = punctuation
 
-        ListPlayers.append([code, name, city, amount, victories])
+        ListPlayers.append([code, name, city, amount, victories, cards, punctuation])
 
 
 def Round(ListPlayers,numRound):
@@ -44,11 +47,18 @@ def Bet(player,valueRound):
         value = int(input("Qual valor deseja apostar? \n----> "))
 
     player[3] -= value
-    print(player,"\n")
+
+    global valueRound 
     valueRound += value
     
     return player
+       
 
+#Reseta o baralho já o embaralhando
+def ResetCheap():
+    cards = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]*4
+    random.shuffle(cards)
+    return cards
 
 def AddCheap():
     cards = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
@@ -61,9 +71,16 @@ def AddCheap():
     print(cheap)
     return cheap
 
+        ListPlayers[i][6] = CountCards(ListPlayers[i][5])
 
-def ShuffleCards(cheap):
-    cheap = random.shuffle(cheap)
+        print("\nSuas Cartas   |", ListPlayers[i][5], "TOTAL   |", ListPlayers[i][6])
+        ShowAmount(ListPlayers[i])
+        ListPlayers[i] = eat(ListPlayers[i], cheap) 
+    
+    print("O Vencedor foi   |", win(ListPlayers))
+
+
+    print(ListPlayers)
 
 
 def main(argv): 
@@ -79,16 +96,14 @@ def main(argv):
                 
                 if(numPlayers == 5):
                     print("Limite de jogadores atingido!")
-                    time.sleep(5)
                     break
-
-                InfoPlayer(numPlayers)
-                newPlayer = input("\n----> Deseja inserir um novo jogador? [s/n] \n----> ")
-                if(newPlayer == "s" or newPlayer == "S"):
-                    numPlayers += 1
-                    print(ListPlayers)
                 else:
-                    break
+                    InfoPlayer(numPlayers)
+                    newPlayer = input("\n----> Deseja inserir um novo jogador? [s/n] \n----> ")
+                    if(newPlayer == "s" or newPlayer == "S" or newPlayer == "Sim" or newPlayer == "SIM" or newPlayer == "sim"):
+                        numPlayers += 1
+                    else:
+                        break
 
             while(True):       
                 play = int(input("\n----> OPÇÕES DE JOGO: \n1 - Jogar\n2 - Sair\n----> "))
@@ -97,13 +112,13 @@ def main(argv):
                     
                     #Cria um novo Round de Jogo
                     numRound = 0
-                    Round(ListPlayers,numRound)
 
                     #Cria um baralho com 52 cartas e embaralha as cartas
                     cheap = AddCheap()
                     ShuffleCards(cheap)
                     print(cheap)
 
+                    Round(ListPlayers,numRound,cheap)
                    
                     teste = "testando"
 
@@ -112,12 +127,12 @@ def main(argv):
                     if(keepPlaying == "s" or keepPlaying == "S"):
                         numGame += 1
                     else:
-                        print('O jogo será encerrado !!')
-                        print("O vencedor foi XXXX")
+                        print('\nO jogo será encerrado !!')
+                        for i in range(len(ListPlayers)):
+                            print("\n", ListPlayers[i][1],"\n------\nCidade: ",ListPlayers[i][2],"\nMontante", ListPlayers[i][3], "\nVitorias: ", ListPlayers[i][4])
                         s.close()
                         break
 
-                    time.sleep(10)
                     s.send(teste.encode()) #.encode - converte a string para bytes
                     data = s.recv(BUFFER_SIZE)
                     texto_recebido = repr(data) #converte de bytes para um formato "printável"
@@ -126,7 +141,12 @@ def main(argv):
                     
                 else:
                     print("Saindo do jogo")
+                    for i in range(len(ListPlayers)):
+                        print("\n", ListPlayers[i][1],"\n------\nCidade: ",ListPlayers[i][2],"\nMontante", ListPlayers[i][3], "\nVitorias: ", ListPlayers[i][4])
+                    s.close()
                     break
+                else:
+                    print("Opção errada !!\n")
                     
                 
 
