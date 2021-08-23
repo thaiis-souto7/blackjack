@@ -29,17 +29,8 @@ class AddPlayer:
 
         ListPlayers.append([code, name, city, amount, victories, cards, punctuation])
 
-
-def Round(ListPlayers,numRound):
-    print("\n*********** BLACKJACK ***********")
-    print("\n************ ROUND ",numRound+1," ************\n")
-    
-    for i in range(len(ListPlayers)):
-        print("Vez do jogador", ListPlayers[i][1])
-        ListPlayers[i] = Bet(ListPlayers[i], valueRound)
-
-    
-def Bet(player,valueRound):
+#Pergunta quanto que o jogador quer apostar e faz a aposta
+def Bet(player):
     amountPlayer = int(player[3])
     value = int(input("Qual valor deseja apostar? \n----> "))
     while (value < 1 or value > amountPlayer):
@@ -60,16 +51,164 @@ def ResetCheap():
     random.shuffle(cards)
     return cards
 
-def AddCheap():
-    cards = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
-    suits = ["copas", "ouros", "paus", "espadas"]
-    cheap = []
+#Distribui as duas cartas iniciais aos jogadores
+def GiveCards(ListPlayers,cheap):
 
-    for suit in suits:
-       for card in cards:
-           cheap.append("{}{}{}".format(card, " ", suit))
-    print(cheap)
-    return cheap
+        for i in range(len(ListPlayers)):
+            cards = []
+            cards.append(cheap[0])
+            cards.append(cheap[1])
+            
+            ListPlayers[i][5] = cards
+
+            del(cheap[0:2])
+
+#Da a opção de comer mais cartas
+def eat(player,cheap):
+    while(True):
+        if player[6] == 21:
+            print("Você já tem 21 !!")
+            break
+        else:    
+            eating = input("----> Deseja comer uma nova carta ? [s/n] \n----> ")
+            if(eating == "s" or eating == "S" or eating == "Sim" or eating == "SIM" or eating == "sim"):
+                cards = player[5]
+                cards.append(cheap[0])
+                player[5] = cards
+                del(cheap[0:1])
+                print("Suas Cartas   |", player[5], "TOTAL   |", CountCards(player[5]))
+                player[6] = CountCards(player[5])
+                
+            else:
+                break
+    return player
+
+
+#Mostra o total de cartas que tem na mão do jogador
+def CountCards(cards):
+
+    sum = 0
+    for i in range(len(cards)):
+        #Considera o A como 11 caso tenha um K Q J ou 10
+        if cards[i] == "A":
+            for j in range(len(cards)):
+                if cards[j] == "K" or cards[j] == "Q" or cards[j] == "J" or cards[j] == "10":
+                    sum += 10
+            sum += 1
+        elif cards[i] == "2":
+            sum += 2
+        elif cards[i] == "3":
+            sum += 3
+        elif cards[i] == "4":
+            sum += 4
+        elif cards[i] == "5":
+            sum += 5
+        elif cards[i] == "6":
+            sum += 6
+        elif cards[i] == "7":
+            sum += 7
+        elif cards[i] == "8":
+            sum += 8
+        elif cards[i] == "9":
+            sum += 9
+        elif cards[i] == "10":
+            sum += 10
+        elif cards[i] == "J":
+            sum += 10
+        elif cards[i] == "Q":
+            sum += 10
+        elif cards[i] == "K":
+            sum += 10
+    
+    #Trata caso o A esteja sendo considerado 11 e esteje estourando, ai passa ela para 1 denovo
+    for i in range(len(cards)):
+        if sum > 21:
+            if cards[i] == "A":
+                for j in range(len(cards)):
+                    if cards[j] == "K" or cards[j] == "Q" or cards[j] == "J" or cards[j] == "10":
+                        sum -= 10
+
+    return sum
+
+def win(ListPlayers):
+
+    large = 0
+    blackjack = []
+    codBlackjack = []
+    codWinners = []
+    winners = []
+    points = []
+    
+
+    for i in range(len(ListPlayers)):
+        
+        points.append(ListPlayers[i][6])
+        if points[i] > large and points[i] <= 21:
+            large = points[i]
+            winners.clear()
+            codWinners.clear()
+            winners.append(ListPlayers[i][1])
+            codWinners.append(ListPlayers[i][0])
+            
+        elif points[i] == large:
+            winners.append(ListPlayers[i][1])
+            codWinners.append(ListPlayers[i][0])
+            
+        if points[i] == 21:
+            for j in range(len(ListPlayers[i][5])):
+                if ListPlayers[i][5][j] == "A":
+                    blackjack.append(ListPlayers[i][1])
+                    codBlackjack.append(ListPlayers[i][0])
+                        
+
+    global valueRound
+    if len(blackjack) > 0:
+        for i in range(len(blackjack)):
+            ListPlayers[codBlackjack[i]-1][3] += valueRound/len(blackjack)
+            ListPlayers[codBlackjack[i]-1][4] += 1
+        print("TIVEMOS BLACKJACK")
+        valueRound = 0
+        return blackjack
+
+    elif len(winners) > 0 :
+        #Se tiver mais que um vencedor, vai dividir o lucro entre os dois e a vitoria para os dois tambem
+        for i in range(len(winners)):
+            ListPlayers[codWinners[i]-1][3] += valueRound/len(winners)
+            ListPlayers[codWinners[i]-1][4] += 1
+        valueRound = 0
+        return winners
+
+    #Caso ninguem tenha tido 21, da o valor total ao vencedor e a vitoria
+    else:
+        for i in range(len(ListPlayers)):
+            ListPlayers[i][3] += valueRound/len(ListPlayers)
+        valueRound = 0
+        print("Não tivemos vencedores, todos estouraram !! O valor foi redividido entre todos os jogadores !!")
+        return winners
+
+    
+
+#Mostra o montande de dinheiro que o jogador tem
+def ShowAmount(player):
+    print("Seu montante é   |",player[3])
+
+
+#Controla o decorrer da rodada
+def Round(ListPlayers,numRound,cheap):
+    print("\n*********** BLACKJACK ***********")
+    print("\n************ ROUND ",numRound+1," ************\n")
+    
+    for i in range(len(ListPlayers)):
+        print("\nVez do jogador", ListPlayers[i][1])
+        ShowAmount(ListPlayers[i])
+        ListPlayers[i] = Bet(ListPlayers[i])
+    
+    #Entrega duas cartas para os jogadores
+    GiveCards(ListPlayers,cheap)
+    #Da a opção de comer novamente ou não
+    for i in range(len(ListPlayers)):
+        print("\n*********************************\nVez do jogador", ListPlayers[i][1])
+        
 
         ListPlayers[i][6] = CountCards(ListPlayers[i][5])
 
@@ -114,9 +253,7 @@ def main(argv):
                     numRound = 0
 
                     #Cria um baralho com 52 cartas e embaralha as cartas
-                    cheap = AddCheap()
-                    ShuffleCards(cheap)
-                    print(cheap)
+                    cheap = ResetCheap()
 
                     Round(ListPlayers,numRound,cheap)
                    
@@ -139,7 +276,8 @@ def main(argv):
                     print('Recebido do servidor', texto_recebido)
                     texto_string = data.decode('utf-8') #converte os bytes em string
                     
-                else:
+                    
+                elif(play == 2):
                     print("Saindo do jogo")
                     for i in range(len(ListPlayers)):
                         print("\n", ListPlayers[i][1],"\n------\nCidade: ",ListPlayers[i][2],"\nMontante", ListPlayers[i][3], "\nVitorias: ", ListPlayers[i][4])
