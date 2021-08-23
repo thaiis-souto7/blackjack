@@ -27,6 +27,15 @@ class AddPlayer:
         ListPlayers.append([code, name, city, amount, victories])
 
 
+def Round(ListPlayers,numRound):
+    print("\n*********** BLACKJACK ***********")
+    print("\n************ ROUND ",numRound+1," ************\n")
+    
+    for i in range(len(ListPlayers)):
+        print("Vez do jogador", ListPlayers[i][1])
+        ListPlayers[i] = Bet(ListPlayers[i], valueRound)
+
+    
 def Bet(player,valueRound):
     amountPlayer = int(player[3])
     value = int(input("Qual valor deseja apostar? \n----> "))
@@ -41,16 +50,6 @@ def Bet(player,valueRound):
     return player
 
 
-def Round(ListPlayers,numRound):
-    print("\n*********** BLACKJACK ***********")
-    print("\n************ ROUND ",numRound+1," ************\n")
-    
-    for i in range(len(ListPlayers)):
-        print("Vez do jogador", ListPlayers[i][1])
-        ListPlayers[i] = Bet(ListPlayers[i], valueRound)
-
-    
-
 def AddCheap():
     cards = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
     suits = ["copas", "ouros", "paus", "espadas"]
@@ -59,7 +58,7 @@ def AddCheap():
     for suit in suits:
        for card in cards:
            cheap.append("{}{}{}".format(card, " ", suit))
-
+    print(cheap)
     return cheap
 
 
@@ -103,6 +102,7 @@ def main(argv):
                     #Cria um baralho com 52 cartas e embaralha as cartas
                     cheap = AddCheap()
                     ShuffleCards(cheap)
+                    print(cheap)
 
                    
                     teste = "testando"
@@ -123,7 +123,6 @@ def main(argv):
                     texto_recebido = repr(data) #converte de bytes para um formato "printável"
                     print('Recebido do servidor', texto_recebido)
                     texto_string = data.decode('utf-8') #converte os bytes em string
-                    
                     
                 else:
                     print("Saindo do jogo")
