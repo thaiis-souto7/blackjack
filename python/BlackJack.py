@@ -199,7 +199,7 @@ def win(ListPlayers):
 
     
 
-#Mostra o montande de dinheiro que o jogador tem
+#Mostra o montante de dinheiro que o jogador tem
 def ShowAmount(player):
     print("Carteira: R$",player[3])
 
