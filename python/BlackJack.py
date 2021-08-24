@@ -270,23 +270,13 @@ def main(argv):
                     #Finaliza o jogo ou inicia um novo Round 
                     keepPlaying = input("\nContinuar jogando? [s/n] \n----> ")
                     if(keepPlaying == "s" or keepPlaying == "S" or keepPlaying == "sim"):
-                        Round(ListPlayers,numRound,cheap)
                         numGame +=1
                     else:
                         print('\n*********************************\n************ PLACAR ************\n*********************************\n')
                         for i in range(len(ListPlayers)):
                             print("\n", ListPlayers[i][1],"\n---------------------------------\nCidade: ",ListPlayers[i][2],"\nCarteira: R$", ListPlayers[i][3], "\nVitorias: ", ListPlayers[i][4], "\n")
                         s.close()
-                        break
-
-
-                    teste = ""
-                    s.send(teste.encode()) #.encode - converte a string para bytes
-                    data = s.recv(BUFFER_SIZE)
-                    texto_recebido = repr(data) #converte de bytes para um formato "printável"
-                    print('Recebido do servidor', texto_recebido)
-                    texto_string = data.decode('utf-8') #converte os bytes em string
-                    
+                        break                    
                     
                 elif(play == 2):
                     print("Saindo do jogo")
