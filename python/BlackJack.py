@@ -11,6 +11,7 @@ BUFFER_SIZE = 1024  # tamanho do buffer para recepção dos dados
 ListPlayers = []
 valueRound = 0
 
+
 def InfoPlayer(numPlayers):
     name = input("----> Digite seu nome: ")
     city = input("----> Digite sua cidade: ")
@@ -28,6 +29,7 @@ class AddPlayer:
         self.punctuation = punctuation
 
         ListPlayers.append([code, name, city, amount, victories, cards, punctuation])
+
 
 #Pergunta quanto que o jogador quer apostar e faz a aposta
 def Bet(player):
@@ -53,6 +55,7 @@ def ResetCheap():
     random.shuffle(cards)
     return cards
 
+
 #Distribui as duas cartas iniciais aos jogadores
 def GiveCards(ListPlayers,cheap):
 
@@ -64,6 +67,7 @@ def GiveCards(ListPlayers,cheap):
             ListPlayers[i][5] = cards
 
             del(cheap[0:2])
+
 
 #Da a opção de comer mais cartas
 def eat(player,cheap):
@@ -137,8 +141,9 @@ def CountCards(cards):
 
     return sum
 
-def win(ListPlayers):
 
+#Define quem foi o vencedor  
+def win(ListPlayers):
     large = 0
     blackjack = []
     codBlackjack = []
@@ -165,8 +170,7 @@ def win(ListPlayers):
             for j in range(len(ListPlayers[i][5])):
                 if ListPlayers[i][5][j] == "A":
                     blackjack.append(ListPlayers[i][1])
-                    codBlackjack.append(ListPlayers[i][0])
-                        
+                    codBlackjack.append(ListPlayers[i][0])           
 
     global valueRound
     if len(blackjack) > 0:
@@ -225,6 +229,7 @@ def Round(ListPlayers,numRound,cheap):
     print("\n\n*********************************\n** O Vencedor foi: ", win(ListPlayers), "**\n*********************************")
 
 
+#Função principal do jogo
 def main(argv): 
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -262,13 +267,10 @@ def main(argv):
                     Round(ListPlayers,numRound,cheap)
                     numRound += 1
                    
-                    teste = ""
-
                     #Finaliza o jogo ou inicia um novo Round 
                     keepPlaying = input("\nContinuar jogando? [s/n] \n----> ")
                     if(keepPlaying == "s" or keepPlaying == "S" or keepPlaying == "sim"):
                         Round(ListPlayers,numRound,cheap)
-                        numRound += 1
                         numGame +=1
                     else:
                         print('\n*********************************\n************ PLACAR ************\n*********************************\n')
@@ -277,6 +279,8 @@ def main(argv):
                         s.close()
                         break
 
+
+                    teste = ""
                     s.send(teste.encode()) #.encode - converte a string para bytes
                     data = s.recv(BUFFER_SIZE)
                     texto_recebido = repr(data) #converte de bytes para um formato "printável"
